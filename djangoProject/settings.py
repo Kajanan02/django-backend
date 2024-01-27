@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-'playground.apps.PlaygroundConfig'
+'playground.apps.PlaygroundConfig',
+'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [

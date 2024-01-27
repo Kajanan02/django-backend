@@ -3,6 +3,7 @@ from django.urls import path
 from django.urls import path, include
 from django.urls import re_path as url
 from . import views
+from . import authViews
 
 urlpatterns = [
     url(r'^movie$',views.MovieApi),
@@ -12,5 +13,6 @@ urlpatterns = [
     url(r'^booking$', views.BookingApi),
     url(r'^faq$', views.FAQApi),
     url(r'^faq/([0-9]+)$', views.FAQApi),
+    url(r'^login$', authViews.LoginApi),
     path('admin/', admin.site.urls),
 ]

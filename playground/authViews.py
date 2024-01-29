@@ -7,9 +7,24 @@ from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.views import Token
 from rest_framework import status
 from django.contrib.auth import authenticate
+from rest_framework.response import Response
 
 
-@api_view(['POST'])
+
+
+def validateToken(token):
+    if token and token.startswith('Bearer '):
+        token_key = token.split(' ')[1]
+        try:
+            token_obj = Token.objects.get(key=token_key)
+            user = token_obj.user
+            return user
+        except Token.DoesNotExist:
+            return False
+    else:
+        return False
+
+@api_view(['POST', 'PUT'])
 @parser_classes([JSONParser])
 def LoginApi(request):
     if request.method == 'POST':
@@ -79,3 +94,44 @@ def LoginApi(request):
             return JsonResponse({
                 'error': 'Invalid credentials or token',
             }, status=status.HTTP_401_UNAUTHORIZED)
+
+    elif request.method == 'PUT':
+        provided_token = request.META.get('HTTP_AUTHORIZATION')
+        isValidToken = validateToken(provided_token)
+
+        if isValidToken:
+            userId = isValidToken.id
+            data = request.data
+            if 'oldpassword' in request.data:
+                oldpassword = request.data.get('oldpassword')
+                newpassword = request.data.get('password')
+
+                passs = {"password": newpassword}
+
+                # Check if the provided old password matches the existing user password
+                if isValidToken.check_password(oldpassword):
+                    isValidToken.set_password(newpassword)
+                    isValidToken.save()
+                    return Response({"message": "Password updated successfully"}, status=status.HTTP_200_OK)
+
+
+                else:
+                    return Response({"error": "Incorrect old password"}, status=status.HTTP_400_BAD_REQUEST)
+
+            else:
+                try:
+                    userInstance = UserSerializer(instance=isValidToken, data=data, partial=True)
+                    if userInstance.is_valid():
+                        userInstance.save()
+
+
+                    else:
+                        return Response({"Message": userInstance.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+                except isValidToken.DoesNotExist:
+                        return Response({"message": "user not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+        else:
+            return Response({"message": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
+

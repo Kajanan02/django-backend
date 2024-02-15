@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^booking$', views.BookingApi),
     url(r'^faq$', views.FAQApi),
     url(r'^faq/([0-9]+)$', views.FAQApi),
+    url(r'^rooms$', views.ROOMSApi),
     url(r'^login$', authViews.LoginApi),
     path('admin/', admin.site.urls),
 ]

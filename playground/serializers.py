@@ -3,6 +3,7 @@ from playground.models import Movie
 from playground.models import Contact
 from playground.models import BookingSeat
 from playground.models import FAQ
+from playground.models import ROOM
 from django.contrib.auth.models import User
 
 
@@ -26,6 +27,10 @@ class BookingSerializer(serializers.ModelSerializer):
 class FAQSerializer(serializers.ModelSerializer):
     class Meta:
         model = FAQ
+        fields = '__all__'
+class ROOMSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ROOM
         fields = '__all__'
 
 

@@ -100,7 +100,7 @@ def LoginApi(request):
         isValidToken = validateToken(provided_token)
 
         if isValidToken:
-            userId = isValidToken.id
+            # userId = isValidToken.id
             data = request.data
             if 'oldpassword' in request.data:
                 oldpassword = request.data.get('oldpassword')

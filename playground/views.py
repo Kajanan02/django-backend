@@ -5,16 +5,18 @@ from playground.serializers import MovieSerializer
 from playground.serializers import ContactSerializer
 from playground.serializers import BookingSerializer
 from playground.serializers import FAQSerializer
+from playground.serializers import ROOMSerializer
 from playground.models import Movie
 from playground.models import Contact
 from playground.models import BookingSeat
 from playground.models import FAQ
+from playground.models import ROOM
 
 @csrf_exempt
 def MovieApi(request,id=0):
     if request.method=='GET':
         movie = Movie.objects.all()
-        print(movie)
+        # print(movie)
         movie_serializer=MovieSerializer(movie,many=True)
         return JsonResponse(movie_serializer.data,safe=False)
     elif request.method=='POST':
@@ -43,7 +45,7 @@ def MovieApi(request,id=0):
 def ContactApi(request,id=0):
     if request.method=='GET':
         contact = Contact.objects.all()
-        print(contact)
+        # print(contact)
         contact_serializer=ContactSerializer(contact,many=True)
         return JsonResponse(contact_serializer.data,safe=False)
     elif request.method=='POST':
@@ -58,7 +60,7 @@ def ContactApi(request,id=0):
 def BookingApi(request,id=0):
     if request.method=='GET':
         booking = BookingSeat.objects.all()
-        print(booking)
+        # print(booking)
         booking_serializer=BookingSerializer(booking,many=True)
         return JsonResponse(booking_serializer.data,safe=False)
     elif request.method=='POST':
@@ -91,6 +93,24 @@ def FAQApi(request,id=0):
             faq_serializer.save()
             return JsonResponse("Updated Successfully", safe=False)
         return JsonResponse("Failed to Update",safe=False)
+    elif request.method=='DELETE':
+        faq=FAQ.objects.get(id=id)
+        faq.delete()
+        return JsonResponse("Deleted Successfully",safe=False)
+
+@csrf_exempt
+def ROOMSApi(request,id=0):
+    if request.method=='GET':
+        room = ROOM.objects.all()
+        room_serializer=ROOMSerializer(room,many=True)
+        return JsonResponse(room_serializer.data,safe=False)
+    elif request.method=='POST':
+        room_data=JSONParser().parse(request)
+        room_serializer=ROOMSerializer(data=room_data)
+        if room_serializer.is_valid():
+            room_serializer.save()
+            return JsonResponse("Added Successfully",safe=False)
+        return JsonResponse("Failed to Add",safe=False)
     elif request.method=='DELETE':
         faq=FAQ.objects.get(id=id)
         faq.delete()

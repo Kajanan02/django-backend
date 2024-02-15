@@ -37,3 +37,6 @@ class FAQ(models.Model):
     question = models.TextField(max_length=900, null=True, blank=True)
     answer = models.TextField(max_length=900, null=True, blank=True)
 
+class ROOM(models.Model):
+    ROOM = models.TextField(max_length=900, null=True, blank=True)
+
